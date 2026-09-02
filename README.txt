@@ -30,3 +30,9 @@ http://localhost:8080
 - 週一～週四可手動新增當週午餐紀錄
 - 同日已有紀錄時可選擇覆蓋
 - Service Worker v1.1：核心檔案改採 Network First，改善 GitHub 更新後手機取得新版的速度
+
+## v1.2
+- 修正台灣 UTC+8 下手動新增週一～週四紀錄可能被寫成前一天的問題
+- dateKey 改用裝置本地日期，不再使用 UTC toISOString
+- 本週紀錄改為日期由新到舊顯示，最新日期固定在最上方
+- Service Worker 快取版本升級為 v1.2

@@ -27,7 +27,13 @@ function mondayOf(date){
   d.setDate(d.getDate() - day + 1);
   return d;
 }
-function dateKey(d){ return new Date(d).toISOString().slice(0,10); }
+function dateKey(d){
+  const x = new Date(d);
+  const y = x.getFullYear();
+  const m = String(x.getMonth()+1).padStart(2,"0");
+  const day = String(x.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
 function currentWeekHistory(){
   const start = mondayOf(new Date());
   const end = new Date(start); end.setDate(end.getDate()+3); end.setHours(23,59,59,999);
@@ -117,7 +123,7 @@ function renderAll(){
     $("weekAvg").textContent = `NT$${avg}`;
   } else $("weekAvg").textContent = "—";
 
-  $("weekHistory").innerHTML = wh.length ? wh.sort((a,b)=>a.date.localeCompare(b.date)).map(x=>`
+  $("weekHistory").innerHTML = wh.length ? wh.sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`
     <div class="history-row">
       <div class="row-main"><strong>${x.name}</strong><span>${x.date} · ${x.category}</span></div>
       <div class="price">NT$${x.actualPrice ?? x.price}</div>
