@@ -135,6 +135,8 @@ function renderAll(){
       </div>
     </div>`).join("");
 
+  refreshManualShopSelect();
+
   document.querySelectorAll("[data-toggle]").forEach(btn=>btn.onclick=()=>{
     const s=state.shops.find(x=>x.id===btn.dataset.toggle); s.enabled = s.enabled===false ? true : false; save(); renderAll();
   });
@@ -142,6 +144,48 @@ function renderAll(){
     state.shops=state.shops.filter(x=>x.id!==btn.dataset.delete); save(); renderAll();
   });
 }
+
+function dateForWeekday(dayNum){
+  const start = mondayOf(new Date());
+  const d = new Date(start);
+  d.setDate(start.getDate() + (Number(dayNum) - 1));
+  return dateKey(d);
+}
+function refreshManualShopSelect(){
+  const sel = $("manualShop");
+  if(!sel) return;
+  const active = state.shops.filter(s=>s.enabled !== false);
+  const previous = sel.value;
+  sel.innerHTML = active.map(s=>`<option value="${s.id}">${s.name}（約 NT$${s.price}）</option>`).join("");
+  if(active.some(s=>s.id===previous)) sel.value = previous;
+  const selected = state.shops.find(s=>s.id===sel.value);
+  if(selected && !$("manualPrice").value) $("manualPrice").value = selected.price;
+}
+function addManualRecord(){
+  const shop = state.shops.find(s=>s.id===$("manualShop").value);
+  if(!shop){ toast("請先選擇店家"); return; }
+
+  const actual = Number($("manualPrice").value || shop.price);
+  const targetDate = dateForWeekday($("manualDay").value);
+  const existing = state.history.findIndex(x=>x.date===targetDate);
+
+  if(existing>=0){
+    const old=state.history[existing];
+    if(!confirm(`${targetDate} 已有「${old.name} NT$${old.actualPrice ?? old.price}」，要覆蓋嗎？`)) return;
+  }
+
+  const rec = {
+    date:targetDate, shopId:shop.id, name:shop.name,
+    price:shop.price, actualPrice:actual, category:shop.category, manual:true
+  };
+  if(existing>=0) state.history[existing]=rec;
+  else state.history.push(rec);
+
+  save();
+  renderAll();
+  toast(`已新增 ${shop.name}`);
+}
+
 function toast(msg){
   const t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800);
 }
@@ -152,6 +196,11 @@ function exportCSV(){
   const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="101_lunch_history.csv"; a.click(); URL.revokeObjectURL(a.href);
 }
+$("manualAddBtn").onclick=addManualRecord;
+$("manualShop").onchange=()=>{
+  const s=state.shops.find(x=>x.id===$("manualShop").value);
+  if(s) $("manualPrice").value=s.price;
+};
 $("drawBtn").onclick=()=>{ state.redrawUsed=false; draw(); $("redrawBtn").disabled=false; };
 $("redrawBtn").onclick=()=>{ if(state.redrawUsed) return; state.redrawUsed=true; draw(); $("redrawBtn").disabled=true; };
 $("acceptBtn").onclick=accept;

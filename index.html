@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ff6b00">
+  <meta name="theme-color" content="#67a9d4">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="午餐 Roulette">
@@ -82,6 +82,22 @@
         <button id="resetWeekBtn" class="text-btn danger">重置本週</button>
       </div>
       <div id="weekHistory" class="history"></div>
+
+      <details class="manual-add">
+        <summary>＋手動新增週一～週四紀錄</summary>
+        <div class="manual-grid">
+          <select id="manualDay">
+            <option value="1">週一</option>
+            <option value="2">週二</option>
+            <option value="3">週三</option>
+            <option value="4">週四</option>
+          </select>
+          <select id="manualShop"></select>
+          <input id="manualPrice" type="number" min="0" step="1" inputmode="numeric" placeholder="實際金額">
+          <button id="manualAddBtn" class="secondary">新增紀錄</button>
+        </div>
+        <p class="hint" style="margin-top:8px">該天已有紀錄時，可選擇覆蓋原紀錄。</p>
+      </details>
     </section>
 
     <section class="card">

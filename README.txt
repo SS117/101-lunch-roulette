@@ -23,3 +23,10 @@ python -m http.server 8080
 http://localhost:8080
 
 手機要安裝成 PWA，建議部署到 GitHub Pages / Cloudflare Pages / Netlify 等 HTTPS 空間。
+
+
+## v1.1
+- 淺藍 / Sky Blue 主題
+- 週一～週四可手動新增當週午餐紀錄
+- 同日已有紀錄時可選擇覆蓋
+- Service Worker v1.1：核心檔案改採 Network First，改善 GitHub 更新後手機取得新版的速度
